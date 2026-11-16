@@ -1,0 +1,13 @@
+{
+  "id":"./",
+  "name":"Word Garden · 나의 단어 정원",
+  "short_name":"Word Garden",
+  "description":"주제별 영어 단어 학습과 복습",
+  "lang":"ko",
+  "start_url":"./",
+  "scope":"./",
+  "display":"standalone",
+  "theme_color":"#3D7654",
+  "background_color":"#F5F7EF",
+  "icons":[{"src":"./icon.svg","sizes":"any","type":"image/svg+xml","purpose":"any"}]
+}

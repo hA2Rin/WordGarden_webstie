@@ -1,0 +1,48 @@
+:root{--garden-ink:#19372b;--garden-deep:#173b2d;--garden-paper:#f4f6ed;--garden-line:#dfe7d9}
+body{background:radial-gradient(ellipse at 50% 0%,#e4efdf,transparent 55rem),var(--garden-paper);color:var(--garden-ink)}
+.app-shell{max-width:1120px;background:transparent;box-shadow:none}
+.app-header{background:#15372b;color:#fff;border-radius:0 0 22px 22px}
+.garden-hero{position:relative;isolation:isolate;overflow:hidden;display:grid;align-items:center;min-height:340px;padding:clamp(28px,5vw,64px);margin:0 0 20px;background:linear-gradient(115deg,#123629 18%,#285c40);color:#fff;border-radius:26px}
+.garden-hero h1{font-size:clamp(36px,6vw,68px);line-height:1.08;letter-spacing:-.065em;margin:12px 0 17px}
+.garden-hero p{color:#d5e7d9;line-height:1.65;margin:0}
+.garden-hero .garden-kicker{color:#dfecad;font-weight:750;font-size:13px;letter-spacing:.08em}
+.garden-hero button{margin-top:25px;min-height:48px;padding:0 18px;border-radius:12px;background:#e6edaf;color:#19372b;font-weight:750;display:inline-flex;align-items:center;gap:22px}
+.garden-hero button:hover{background:#f2f6ce}
+.garden-art{position:absolute;z-index:-1;right:2%;bottom:-25%;width:min(48%,450px);aspect-ratio:1}
+.garden-art:before{content:"";position:absolute;inset:2%;border:1px solid #b3d39155;border-radius:50%;box-shadow:0 0 0 18px #b3d39118,0 0 0 37px #b3d39115}
+.garden-art i{position:absolute;left:49%;bottom:30%;width:44%;height:23%;transform-origin:0 100%;border-radius:100% 0 100% 0;background:linear-gradient(135deg,#accb75,#50905d);transform:rotate(-30deg)}
+.garden-art i:nth-child(2){transform:rotate(-70deg);background:linear-gradient(135deg,#d7dc9c,#6d9d65)}
+.garden-art i:nth-child(3){transform:rotate(-120deg);background:linear-gradient(135deg,#8dbb81,#397a50)}
+.garden-art i:nth-child(4){transform:rotate(-165deg)}
+.garden-art i:nth-child(5){height:2%;width:62%;transform:rotate(-89deg);border-radius:15px}
+.today-copy h2{margin:0;font-size:19px}
+.today-card,.major-card,.study-card{border:1px solid var(--garden-line);box-shadow:0 5px 18px #21442b0a}
+.preview-card{background:#23513c;border-radius:16px}
+.garden-activity{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:14px;margin-top:18px;align-items:start}
+.garden-activity>*{margin-top:0}
+.major-card:hover{border-color:#78a482;box-shadow:0 8px 20px #21442b16}
+.bottom-nav{border-color:var(--garden-line);background:#fcfdf7}
+@media(max-width:640px){.garden-hero{min-height:310px;border-radius:20px}.garden-art{right:-21%;bottom:-12%;width:78%;opacity:.45}.garden-activity{grid-template-columns:minmax(0,1fr)}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;transition:none!important}}
+
+.garden-hero{grid-template-columns:minmax(0,1fr) minmax(0,.75fr);gap:16px}
+.garden-mascot{display:block;width:100%;max-width:325px;height:auto;justify-self:center;filter:drop-shadow(0 10px 16px #0b201b50)}
+.chess-battle-wrap,.quiz-battle-card,.quiz-options,.quiz-option{min-width:0;max-width:100%}
+.quiz-battle-card{overflow-wrap:anywhere}
+.quiz-header-row{flex-wrap:wrap;gap:8px}
+.quiz-options{grid-template-columns:minmax(0,1fr)}
+.quiz-option{width:100%;display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:clamp(6px,2vw,14px);white-space:normal}
+.quiz-option>.quiz-option-text{min-width:0;padding:0;background:none;color:inherit;font:inherit;overflow-wrap:anywhere}
+.quiz-option>b{white-space:normal}
+.chess-difficulty{min-width:0;display:flex;flex-wrap:wrap;gap:8px;margin:0 0 14px;padding:8px 12px 12px;border:1px solid var(--garden-line);border-radius:14px;background:#fff}
+.chess-difficulty legend{padding:0 5px;font-size:13px;font-weight:750;color:var(--garden-ink)}
+.chess-difficulty button{flex:1 1 70px;min-height:44px;padding:6px 10px;border:1px solid var(--garden-line);border-radius:9px;background:var(--garden-paper);color:var(--garden-ink);font-weight:700}
+.chess-difficulty button[aria-pressed="true"]{background:var(--garden-deep);color:white;border-color:var(--garden-deep)}
+@media(max-width:520px){
+  .garden-hero{grid-template-columns:minmax(0,1fr) minmax(0,.5fr);gap:6px;padding:22px 16px}
+  .garden-hero h1{font-size:clamp(24px,7vw,36px)}
+  .garden-hero p{font-size:13px}
+  .garden-hero button{padding-inline:10px;gap:9px}
+  .quiz-battle-card{padding:14px}
+  .quiz-option{padding:12px 9px}
+}
