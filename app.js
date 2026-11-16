@@ -2,6 +2,7 @@
 import {CONFIG} from './config.js';
 import {initialState, readState, persist, newSession, answerSession, acknowledge, pendingEvents, localDay, streak, newRecordId} from './store.js?v=6';
 import {syncEvents} from './sync.js';
+import {createChessConnection} from './chessOnline.js';
 import {PIECES, createInitialChessState, getPieceMoves, makeMove, chooseAiMove, isWhite, isBlack} from './chessEngine.js?v=5';
 
 const $ = selector => document.querySelector(selector);
@@ -21,6 +22,18 @@ let syncStatus = '';
 
 // Interactive Chess Battle State
 let chess = createInitialChessState();
+let chessMode = 'ai';
+let chessConnection;
+let onlineSide;
+let onlineStatus = 'idle';
+let onlineCode = '';
+let onlineError = '';
+const chessModes = [['online', '온라인 대전'], ['local', '오프라인 2인'], ['ai', 'AI전']];
+const sideLabel = side => side === 'white' ? '백' : '흑';
+const otherSide = side => side === 'white' ? 'black' : 'white';
+const canPlayChess = () => chessMode === 'local'
+  || (chessMode === 'ai' && chess.turn === 'white')
+  || (chessMode === 'online' && onlineStatus === 'connected' && chess.turn === onlineSide);
 let chessDifficulty = 'normal';
 const chessDifficulties = [
   ['easy', '쉬움'],
@@ -663,7 +676,7 @@ function result() {
 // 6. WORD BATTLE CHESS VIEW
 function quiz() {
   const isUserTurn = chess.turn === 'white';
-  const q = chess.activeQuiz;
+  const q = canPlayChess() ? chess.activeQuiz : null;
 
   // Board coordinates labels
   const files = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'];
@@ -692,6 +705,12 @@ function quiz() {
 
   return `
   <section class="chess-battle-wrap">
+    <fieldset class="chess-difficulty chess-mode">
+      <legend>대전 모드</legend>
+      ${chessModes.map(([id, label]) => `<button type="button" data-action="chess-mode" data-mode="${id}" aria-pressed="${chessMode === id}">${label}</button>`).join('')}
+    </fieldset>
+    ${chessMode === 'online' ? onlinePanel() : ''}
+    ${chessMode === 'ai' ? `
     <fieldset class="chess-difficulty">
       <legend>상대 AI 난이도</legend>
       ${chessDifficulties.map(([id, label]) => `
@@ -699,10 +718,11 @@ function quiz() {
           aria-pressed="${chessDifficulty === id}">${label}</button>
       `).join('')}
     </fieldset>
+    ` : ''}
     <div class="chess-battle-header">
       <div class="chess-score-col">
         <span class="player-tag user ${isUserTurn ? 'active-turn' : ''}">
-          ⚪ 나 (백) ${isUserTurn ? '👑 공격권 소유' : ''}
+          ⚪ ${chessMode === 'ai' ? '나 (백)' : '백'} ${isUserTurn ? '공격권' : ''}
         </span>
         <span class="captured-row">${renderCaptured(chess.capturedByWhite) || '획득 기물 없음'}</span>
       </div>
@@ -711,7 +731,7 @@ function quiz() {
       </div>
       <div class="chess-score-col right">
         <span class="player-tag ai ${!isUserTurn ? 'active-turn' : ''}">
-          ⚫ 상대 AI (흑) ${!isUserTurn ? '🤖 공격권 소유' : ''}
+          ⚫ ${chessMode === 'ai' ? '상대 AI (흑)' : '흑'} ${!isUserTurn ? '공격권' : ''}
         </span>
         <span class="captured-row">${renderCaptured(chess.capturedByBlack) || '획득 기물 없음'}</span>
       </div>
@@ -725,10 +745,12 @@ function quiz() {
     <!-- BATTLE STATUS BANNER -->
     <div class="battle-turn-banner ${isUserTurn ? 'turn-user' : 'turn-ai'}">
       ${
-        chess.phase === 'game_over' ? `🏆 게임 종료! 승자: ${chess.winner === 'white' ? '나 (백) 승리!' : '상대 AI 승리!'}` :
-        chess.phase === 'move_piece' ? (isUserTurn ? '✨ 퀴즈 정답! 체스판에서 백(⚪) 말을 터치하여 이동하세요.' : '🤖 AI가 이동할 말을 결정 중입니다...') :
+        chess.phase === 'game_over' ? `🏆 ${sideLabel(chess.winner)} 승리!` :
+        chessMode === 'online' && onlineStatus !== 'connected' ? '친구와 연결하면 대전이 시작됩니다.' :
+        !canPlayChess() && chessMode === 'online' ? '상대방의 차례를 기다리는 중입니다.' :
+        chess.phase === 'move_piece' ? `✨ 퀴즈 정답! ${sideLabel(chess.turn)} 말을 골라 이동하세요.` :
         chess.phase === 'ai_thinking' ? '🤖 상대 AI가 단어 퀴즈에 도전 중입니다...' :
-        (isUserTurn ? '🎯 나의 공격권! 단어 문제를 맞추면 체스 말을 움직일 수 있습니다.' : '⚠️ 상대 AI의 공격권! AI가 틀리면 공격권이 나에게 돌아옵니다!')
+        `🎯 ${sideLabel(chess.turn)} 차례. 문제를 맞추면 말을 움직일 수 있습니다.`
       }
     </div>
 
@@ -737,10 +759,10 @@ function quiz() {
       <section class="quiz-battle-card">
         <div class="quiz-header-row">
           <span class="quiz-direction-tag">${q.type === 'en_to_ko' ? '🇺🇸 영단어 ➔ 한국어 뜻' : '🇰🇷 한국어 뜻 ➔ 영어 단어'}</span>
-          <span class="quiz-turn-badge">${isUserTurn ? '나의 문제' : '상대방 문제'}</span>
+          <span class="quiz-turn-badge">${sideLabel(chess.turn)}의 문제</span>
         </div>
         <div class="quiz-question-box">
-          <h2 lang="en">${escape(q.question)}</h2>
+          <h2 lang="${q.type === 'en_to_ko' ? 'en' : 'ko'}">${escape(q.question)}</h2>
           <p class="quiz-sub">${escape(q.sub)}</p>
         </div>
         <div class="quiz-options">
@@ -763,7 +785,7 @@ function quiz() {
           <div class="quiz-feedback ${q.isCorrect ? 'correct-fb' : 'wrong-fb'}">
             ${q.isCorrect ?
               `🎉 <b>정답입니다!</b> 체스 공격권을 획득하여 말을 움직일 수 있습니다!` :
-              `❌ <b>틀렸습니다!</b> 공격권이 상대방(${isUserTurn ? 'AI' : '나'})에게 넘어갑니다!`
+              `❌ <b>틀렸습니다!</b> 공격권이 ${sideLabel(otherSide(chess.turn))}에게 넘어갑니다.`
             }
             <div style="font-size:12px;margin-top:4px;color:#475569;">정답: <b>${escape(q.answer)}</b></div>
           </div>
@@ -776,7 +798,7 @@ function quiz() {
 
     ${chess.phase === 'game_over' ? `
       <div style="text-align:center;margin-top:20px;">
-        <button class="button primary" style="margin:0 auto;max-width:240px;" data-action="restart-chess">새 체스 게임 시작 ↻</button>
+        <button class="button primary" style="margin:0 auto;max-width:240px;" data-action="${chessMode === 'online' ? 'chess-online-reset' : 'restart-chess'}">새 체스 게임 시작 ↻</button>
       </div>
     ` : ''}
   </section>`;
@@ -913,13 +935,124 @@ function beginSession(setId, ids = null, mode = 'learn') {
 /* ============================================
    AI TURN ENGINE FOR CHESS BATTLE
    ============================================ */
+function resetChess() {
+  clearTimeout(aiTimer);
+  chess = createInitialChessState();
+  generateChessQuiz('white');
+}
+
+function closeOnlineChess() {
+  chessConnection?.close();
+  chessConnection = undefined;
+  onlineSide = undefined;
+  onlineStatus = 'idle';
+  onlineCode = '';
+  onlineError = '';
+  resetChess();
+}
+
+function onlinePanel() {
+  if (onlineStatus === 'connected') {
+    return `<section class="chess-online"><p>연결됨 · 내 말은 ${sideLabel(onlineSide)}입니다.</p>
+      <button class="button subtle" data-action="chess-online-reset">연결 종료</button></section>`;
+  }
+  if (onlineStatus === 'disconnected') {
+    return '<section class="chess-online"><p>상대와 연결이 끊겼습니다.</p><button class="button subtle" data-action="chess-online-reset">다시 연결</button></section>';
+  }
+  if (onlineStatus === 'busy') return '<section class="chess-online" role="status">연결 준비 중…</section>';
+  return `<section class="chess-online">
+    ${onlineError ? `<p role="alert">${escape(onlineError)}</p>` : ''}
+    ${onlineCode ? `<label>${onlineSide === 'white' ? '초대 코드' : '응답 코드'} · 복사해서 친구에게 보내세요.
+      <textarea readonly rows="2" spellcheck="false">${escape(onlineCode)}</textarea></label>` : ''}
+    ${onlineStatus === 'answer' ? '<p role="status">친구가 응답 코드를 입력하면 대전이 시작됩니다.</p>' : onlineStatus === 'waiting' ? '<p role="status">친구와 연결하는 중입니다.</p>' :
+      `<label>${onlineStatus === 'offer' ? '친구의 응답 코드' : '친구의 초대 코드'}
+        <textarea id="chess-peer-code" rows="2" maxlength="100000" spellcheck="false"></textarea></label>`}
+    <div class="chess-online-actions">
+      ${onlineStatus === 'idle' ? '<button class="button primary" data-action="chess-online-offer">초대 코드 만들기</button><button class="button subtle" data-action="chess-online-answer">초대에 응답</button>' : ''}
+      ${onlineStatus === 'offer' ? '<button class="button primary" data-action="chess-online-accept">응답 코드 연결</button>' : ''}
+      ${onlineStatus !== 'idle' ? '<button class="button subtle" data-action="chess-online-reset">취소</button>' : ''}
+    </div></section>`;
+}
+
+function finishChessTurn(move, remote = false) {
+  if (!remote && chessMode === 'online' && !chessConnection?.send({ move })) {
+    onlineStatus = 'disconnected';
+    render();
+    return;
+  }
+  if (move) {
+    chess = makeMove(chess, ...move);
+    if (chess.phase === 'game_over') {
+      render();
+      return;
+    }
+  }
+  if (chessMode === 'ai') {
+    triggerAiTurn();
+    return;
+  }
+  chess.turn = otherSide(chess.turn);
+  chess.phase = 'word_quiz';
+  generateChessQuiz(chess.turn);
+  render();
+}
+
+function receiveChessTurn(message) {
+  if (chessMode !== 'online' || onlineStatus !== 'connected' ||
+      chess.turn === onlineSide || chess.phase === 'game_over') return;
+  const move = message?.move;
+  if (move !== null) {
+    if (!Array.isArray(move) || move.length !== 4 ||
+        !move.every(n => Number.isInteger(n) && n >= 0 && n < 8)) return;
+    const [r, c, toR, toC] = move;
+    const piece = chess.board[r][c];
+    if (!piece || isWhite(piece) !== (chess.turn === 'white') ||
+        !getPieceMoves(chess.board, r, c).some(([row, col]) => row === toR && col === toC)) return;
+  }
+  finishChessTurn(move, true);
+}
+
+async function connectChess(action, code) {
+  const previous = onlineStatus;
+  if (action !== 'offer' && !code) {
+    onlineError = '친구에게 받은 연결 코드를 입력하세요.';
+    render();
+    return;
+  }
+  onlineStatus = 'busy';
+  onlineError = '';
+  render();
+  let connection = chessConnection;
+  try {
+    if (action !== 'accept') {
+      onlineSide = action === 'offer' ? 'white' : 'black';
+      connection = createChessConnection(receiveChessTurn, status => {
+        if (chessConnection !== connection) return;
+        onlineStatus = status;
+        render();
+      });
+      chessConnection = connection;
+    }
+    const output = await connection[action](code);
+    if (chessConnection !== connection || onlineStatus !== 'busy') return;
+    if (output) onlineCode = output;
+    onlineStatus = action === 'accept' ? 'waiting' : action;
+  } catch {
+    if (chessMode !== 'online' || chessConnection !== connection) return;
+    if (action !== 'accept') closeOnlineChess();
+    onlineStatus = previous;
+    onlineError = '연결할 수 없어요. 받은 코드 전체를 확인하고 다시 시도하세요.';
+  }
+  render();
+}
+
 function triggerAiTurn() {
   chess.turn = 'black';
   chess.phase = 'ai_thinking';
   render();
 
   // AI simulates thinking and answering question
-  setTimeout(() => {
+  aiTimer = setTimeout(() => {
     // 70% chance AI answers correctly, 30% chance AI makes a mistake
     const aiSuccess = Math.random() < 0.70;
     if (aiSuccess) {
@@ -933,6 +1066,10 @@ function triggerAiTurn() {
           chess.phase = 'word_quiz';
           generateChessQuiz('white');
         }
+      } else {
+        chess.turn = 'white';
+        chess.phase = 'word_quiz';
+        generateChessQuiz('white');
       }
     } else {
       // AI failed! Turn reverts back to User!
@@ -1062,12 +1199,27 @@ document.addEventListener('click', async (e) => {
   }
 
   /* ================= CHESS BATTLE ACTIONS ================= */
-  if (action === 'chess-quiz-select' && !chess.activeQuiz.checked) {
+  if (action === 'chess-mode' && chessMode !== btn.dataset.mode) {
+    closeOnlineChess();
+    chessMode = btn.dataset.mode;
+    render();
+  }
+
+  if (action === 'chess-online-reset') {
+    closeOnlineChess();
+    render();
+  }
+
+  if (['chess-online-offer', 'chess-online-answer', 'chess-online-accept'].includes(action)) {
+    await connectChess(action.split('-').at(-1), $('#chess-peer-code')?.value.trim());
+  }
+
+  if (action === 'chess-quiz-select' && canPlayChess() && chess.activeQuiz && !chess.activeQuiz.checked) {
     chess.activeQuiz.selected = btn.dataset.opt;
     render();
   }
 
-  if (action === 'chess-quiz-submit' && chess.activeQuiz?.selected && !chess.activeQuiz.checked) {
+  if (action === 'chess-quiz-submit' && canPlayChess() && chess.activeQuiz?.selected && !chess.activeQuiz.checked) {
     const q = chess.activeQuiz;
     const isCorrect = q.selected === q.answer;
     q.checked = true;
@@ -1098,18 +1250,17 @@ document.addEventListener('click', async (e) => {
     render();
   }
 
-  if (action === 'chess-quiz-continue' && chess.activeQuiz?.checked) {
+  if (action === 'chess-quiz-continue' && canPlayChess() && chess.activeQuiz?.checked) {
     const isCorrect = chess.activeQuiz.isCorrect;
     if (isCorrect) {
       // User got it right! Now User can move a piece on the board
       chess.phase = 'move_piece';
       chess.activeQuiz = null;
-      toast('체스판에서 이동할 백(⚪) 말을 터치하세요!');
+      toast(`체스판에서 ${sideLabel(chess.turn)} 말을 골라 이동하세요.`);
       render();
     } else {
       // User got it wrong! Turn switches to AI!
-      toast('틀렸습니다! 공격권이 상대방 AI(⚫)에게 넘어갑니다.');
-      triggerAiTurn();
+      finishChessTurn(null);
     }
   }
 
@@ -1118,7 +1269,7 @@ document.addEventListener('click', async (e) => {
     const c = parseInt(btn.dataset.c, 10);
 
     // Only allow human moves during 'move_piece' phase on White turn
-    if (chess.phase !== 'move_piece' || chess.turn !== 'white') {
+    if (chess.phase !== 'move_piece' || !canPlayChess()) {
       if (chess.phase === 'word_quiz') {
         toast('단어 퀴즈를 먼저 맞춰야 말을 움직일 수 있습니다!');
       }
@@ -1130,22 +1281,12 @@ document.addEventListener('click', async (e) => {
     // If a square was already selected and clicked is a valid move
     if (chess.selectedSquare && chess.validMoves.some(([vr, vc]) => vr === r && vc === c)) {
       const [fromR, fromC] = chess.selectedSquare;
-      chess = makeMove(chess, fromR, fromC, r, c);
-      render();
-
-      if (chess.phase === 'game_over') {
-        toast('체스 승리! 축하합니다!');
-        return;
-      }
-
-      // Move complete! Now opponent AI's turn
-      toast('말 이동 완료! 상대방의 공격권으로 넘어갑니다.');
-      triggerAiTurn();
+      finishChessTurn([fromR, fromC, r, c]);
       return;
     }
 
     // Select White piece
-    if (clickedPiece && isWhite(clickedPiece)) {
+    if (clickedPiece && isWhite(clickedPiece) === (chess.turn === 'white')) {
       chess.selectedSquare = [r, c];
       chess.validMoves = getPieceMoves(chess.board, r, c);
       render();
@@ -1163,8 +1304,7 @@ document.addEventListener('click', async (e) => {
   }
 
   if (action === 'restart-chess') {
-    chess = createInitialChessState();
-    generateChessQuiz('white');
+    resetChess();
     render();
   }
 
