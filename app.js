@@ -1,6 +1,6 @@
 ﻿import {MAJORS, SETS, WORDS, wordById, getSetsByMajor, getWordsByMajor, getMajorById} from './data.js';
 import {CONFIG} from './config.js';
-import {initialState, readState, persist, newSession, answerSession, acknowledge, pendingEvents, localDay, streak} from './store.js';
+import {initialState, readState, persist, newSession, answerSession, acknowledge, pendingEvents, localDay, streak, newRecordId} from './store.js?v=6';
 import {syncEvents} from './sync.js';
 import {PIECES, createInitialChessState, getPieceMoves, makeMove, chooseAiMove, isWhite, isBlack} from './chessEngine.js?v=5';
 
@@ -1078,7 +1078,7 @@ document.addEventListener('click', async (e) => {
     const nextState = structuredClone(state);
 
     nextState.events.push({
-      id: crypto.randomUUID(),
+      id: newRecordId(),
       sessionId: 'chess_battle',
       wordId: word.id,
       status: isCorrect ? 'known' : 'review',

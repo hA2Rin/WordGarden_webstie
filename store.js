@@ -11,8 +11,16 @@ export function readState(storage) {
   return {...initialState(), ...data};
 }
 export function persist(storage, state) { storage.setItem(STORAGE_KEY, JSON.stringify(state)); return state; }
+export function newRecordId() {
+  if (typeof crypto.randomUUID === 'function') return crypto.randomUUID();
+  const bytes = crypto.getRandomValues(new Uint8Array(16));
+  bytes[6] = (bytes[6] & 0x0f) | 0x40;
+  bytes[8] = (bytes[8] & 0x3f) | 0x80;
+  const hex = Array.from(bytes, byte => byte.toString(16).padStart(2, '0')).join('');
+  return [hex.slice(0,8), hex.slice(8,12), hex.slice(12,16), hex.slice(16,20), hex.slice(20)].join('-');
+}
 export function newSession(setId, ids, mode='learn') {
-  return {id:crypto.randomUUID(),setId,ids:[...ids],index:0,answers:[],mode,startedAt:new Date().toISOString()};
+  return {id:newRecordId(),setId,ids:[...ids],index:0,answers:[],mode,startedAt:new Date().toISOString()};
 }
 // 상태와 전송 대기 이벤트를 한 번의 저장으로 함께 기록합니다.
 export function answerSession(state, status, date = new Date()) {
@@ -20,7 +28,7 @@ export function answerSession(state, status, date = new Date()) {
   if (!active || active.index >= active.ids.length) return state;
   if (!['known','review'].includes(status)) throw new Error('Invalid learning response');
   const wordId = active.ids[active.index];
-  const event = {id:crypto.randomUUID(),sessionId:active.id,wordId,status,occurredAt:date.toISOString(),day:localDay(date),source:'web'};
+  const event = {id:newRecordId(),sessionId:active.id,wordId,status,occurredAt:date.toISOString(),day:localDay(date),source:'web'};
   const next = structuredClone(state);
   next.records[wordId] = {status,updatedAt:event.occurredAt};
   next.events.push(event);
