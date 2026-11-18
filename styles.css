@@ -1644,6 +1644,12 @@ dialog::backdrop {
 
 /* WORD QUIZ BATTLE CARD */
 .quiz-battle-card {
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
+  transform: none;
+  animation: none;
+  overflow-wrap: anywhere;
   background: var(--surface);
   border: 1.5px solid var(--line);
   border-radius: var(--radius-lg);
@@ -1670,10 +1676,12 @@ dialog::backdrop {
   color: var(--muted);
 }
 .quiz-question-box {
+  min-width: 0;
   text-align: center;
   padding: 14px 0 20px;
 }
 .quiz-question-box h2 {
+  overflow-wrap: anywhere;
   font-size: 32px;
   font-weight: 850;
   color: var(--text);
