@@ -222,7 +222,7 @@ function header() {
       </svg>
     </button>
     <div class="header-tools">
-      <button class="icon-button" data-action="open-settings" aria-label="설정 및 동기화">⚙️</button>
+      <button class="icon-button" data-action="open-settings" aria-label="내 기록"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 3-.5 2-2 1.2-2-.5-2 3.6L4 11v2l-1.5 1.7 2 3.6 2-.5 2 1.2.5 2h6l.5-2 2-1.2 2 .5 2-3.6L20 13v-2l1.5-1.7-2-3.6-2 .5-2-1.2L15 3Z"/><circle cx="12" cy="12" r="3"/></svg></button>
     </div>
   </div>
   <div class="header-bottom">
