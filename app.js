@@ -883,6 +883,30 @@ function renderWordCard(word) {
 /* ============================================
    RENDER MAIN LOOP
    ============================================ */
+function recordsPage() {
+  const known = Object.values(state.records).filter(record => record.status === 'known').length;
+  return `<section class="records-heading"><span class="eyebrow">MY LEARNING</span>
+    <h1>내 기록</h1><p class="muted">한 단어씩 쌓아 온 나의 학습을 살펴보세요.</p></section>
+    <section class="stats-grid records-summary" aria-label="학습 요약">
+      <div><strong>${known}</strong><span>학습 완료</span></div>
+      <div><strong>${reviewWords().length}</strong><span>다시 볼 단어</span></div>
+      <div><strong>${streak(state)}</strong><span>연속 학습일</span></div>
+    </section>
+    ${attendanceCalendar()}
+    <section class="records-tools" aria-labelledby="records-tools-title">
+      <h2 id="records-tools-title">기록 관리</h2>
+      <p class="muted">학습 기록은 현재 기기의 브라우저에 저장됩니다. 기기를 바꾸기 전에는 백업을 내려받아 주세요.</p>
+      <div class="dialog-actions">
+        <button class="button primary full" id="export-records">학습 기록 내려받기 ↓</button>
+        <button class="button subtle full" id="sync-records">동기화 상태 확인</button>
+      </div>
+      <details class="records-reset"><summary>학습 기록 초기화</summary>
+        <p class="muted">초기화하면 이 기기의 학습 기록과 복습 노트가 삭제됩니다.</p>
+        <button class="button subtle" id="reset-study-btn">기록 초기화</button>
+      </details>
+    </section>`;
+}
+
 function render() {
   if (view === 'study' && !state.active) view = 'result';
   $('#header').innerHTML = header();
@@ -899,6 +923,7 @@ function render() {
     case 'result': content = result(); break;
     case 'quiz': content = quiz(); break;
     case 'review': content = reviewPage(); break;
+    case 'settings': content = recordsPage(); break;
     default: content = home(); break;
   }
   $('#main').dataset.page = view;
@@ -1099,7 +1124,7 @@ document.addEventListener('click', async (e) => {
   if (action === 'nav-majors') pushView('majors');
   if (action === 'nav-quiz') pushView('quiz');
   if (action === 'nav-review') pushView('review');
-  if (action === 'open-settings' || action === 'nav-settings') $('#settings').showModal();
+  if (action === 'open-settings' || action === 'nav-settings') pushView('settings');
 
   if (action === 'select-major') {
     selectedMajorId = majorId;
@@ -1316,7 +1341,8 @@ document.addEventListener('click', async (e) => {
 /* ============================================
    SETTINGS & SYNC ACTIONS
    ============================================ */
-$('#export-records')?.addEventListener('click', () => {
+document.addEventListener('click', (event) => {
+  if (!event.target.closest('#export-records')) return;
   const raw = JSON.stringify(state, null, 2);
   const blob = new Blob([raw], { type: 'application/json' });
   const url = URL.createObjectURL(blob);
@@ -1327,7 +1353,8 @@ $('#export-records')?.addEventListener('click', () => {
   setTimeout(() => URL.revokeObjectURL(url), 1000);
 });
 
-$('#sync-records')?.addEventListener('click', async () => {
+document.addEventListener('click', async (event) => {
+  if (!event.target.closest('#sync-records')) return;
   toast('로컬 저장소 동기화 상태를 점검 중입니다...');
   try {
     const res = await syncEvents(state);
@@ -1338,12 +1365,12 @@ $('#sync-records')?.addEventListener('click', async () => {
   }
 });
 
-$('#reset-study-btn')?.addEventListener('click', () => {
+document.addEventListener('click', (event) => {
+  if (!event.target.closest('#reset-study-btn')) return;
   if (confirm('모든 학습 기록과 복습 노트를 초기화하시겠습니까? (되돌릴 수 없습니다)')) {
     state = initialState();
     persist(localStorage, state);
     render();
-    $('#settings').close();
     toast('학습 기록이 초기화되었습니다.');
   }
 });

@@ -11,10 +11,10 @@
   <link rel="stylesheet" href="./styles.css?v=8">
   <link rel="stylesheet" href="./garden.css?v=7">
   <link rel="stylesheet" href="./editorial.css?v=9">
-  <link rel="stylesheet" href="./arrival.css?v=10">
+  <link rel="stylesheet" href="./arrival.css?v=11">
   <script defer src="./arrival.js?v=10"></script>
   <script defer src="./editorial.js?v=9"></script>
-  <script type="module" src="./app.js?v=10"></script>
+  <script type="module" src="./app.js?v=11"></script>
 </head>
 <body>
   <a class="skip-link" href="#main">본문으로 건너뛰기</a>
@@ -47,16 +47,16 @@
       <span class="nav-label">복습/즐겨찾기</span>
       <span id="nav-review-badge" class="nav-badge" hidden>0</span>
     </button>
-    <button class="nav-tab" data-action="nav-settings" aria-label="설정 탭">
+    <button class="nav-tab" data-action="nav-settings" aria-label="내 기록 탭">
       <span class="nav-icon">⚙️</span>
-      <span class="nav-label">설정</span>
+      <span class="nav-label">내 기록</span>
     </button>
   </nav>
 
   <div id="toast" class="toast" role="status" hidden></div>
 
   <!-- Settings Dialog -->
-  <dialog id="settings" aria-labelledby="settings-title">
+  <template id="legacy-settings">
     <form method="dialog"><button class="icon-button close-dialog" aria-label="닫기">✕</button></form>
     <span class="eyebrow">smalltalk · DATA & SYNC</span>
     <h2 id="settings-title">학습 기록 및 오프라인 보관소</h2>
@@ -68,7 +68,7 @@
       <button class="button subtle full" id="reset-study-btn" style="color:#ef4444;">학습 기록 초기화</button>
     </div>
     <p class="fine-print" id="sync-description"></p>
-  </dialog>
+  </template>
   <noscript>smalltalk를 이용하려면 브라우저의 JavaScript를 켜 주세요.</noscript>
 </body>
 </html>

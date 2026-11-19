@@ -1,4 +1,14 @@
 /* Quiet, bounded entrance motion: gameplay never inherits transforms. */
+.records-heading { padding: 8px 0 24px; }
+.records-heading h1 { font-size: clamp(28px, 6vw, 38px); margin: 10px 0; letter-spacing: -.05em; }
+.records-heading p, .records-tools p { line-height: 1.8; font-size: 14px; }
+.records-summary { grid-template-columns: repeat(3, minmax(0, 1fr)); margin-bottom: 24px; }
+.records-tools { margin-top: 28px; padding-top: 24px; border-top: 1px solid var(--line); }
+.records-tools h2 { font-size: 19px; }
+.records-tools .dialog-actions { max-width: 440px; }
+.records-reset { margin-top: 28px; border-top: 1px solid var(--line); padding-top: 20px; }
+.records-reset summary { cursor: pointer; color: #866b5e; font-size: 13px; }
+.records-reset button { color: #974f43; }
 .garden-hero { position: relative; overflow: hidden; border: 1px solid #d7dfcd; background: #e9eddf; }
 .garden-hero .garden-mascot { aspect-ratio: 1; object-fit: contain; width: 100%; opacity: 1; }
 .garden-hero h1 { text-wrap: balance; }
