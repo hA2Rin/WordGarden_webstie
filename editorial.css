@@ -1,0 +1,198 @@
+:root {
+  --primary: #355d49;
+  --primary-dark: #234333;
+  --primary-soft: #edf2e9;
+  --text: #253329;
+  --muted: #738075;
+  --line: #e0e4da;
+  --surface: #fffefb;
+  --surface-subtle: #f2f3ed;
+}
+html, body { background: #f6f5ef; color: var(--text); }
+body { font-family: -apple-system, BlinkMacSystemFont, "Noto Sans KR", sans-serif; letter-spacing: -.025em; }
+button { font-family: inherit; }
+.app-shell { background: transparent; box-shadow: none; }
+.app-header { background: #f6f5ef; color: #263e30; border-radius: 0; padding: 22px 22px 16px; border-bottom: 1px solid #e0e4da; }
+.brand { color: #263e30; font-size: 23px; font-weight: 750; letter-spacing: -1px; }
+.header-tools { gap: 8px; }
+.local-status { color: #647565; background: transparent; font-size: 10px; padding: 0; }
+.app-header .local-status { display: none; }
+.connection { padding: 12px 24px; background: #edf0e4; color: #586647; font-size: 13px; line-height: 1.6; }
+.app-header .icon-button { color: #355d49; background: #e9ede3; border-radius: 50%; width: 36px; height: 36px; }
+.header-bottom { flex-direction: column; align-items: stretch; gap: 14px; margin-top: 9px; }
+.header-bottom p { color: #7c8579; font-size: 12px; line-height: 1.5; }
+.header-bottom nav { display: flex; gap: 20px; width: 100%; }
+.header-bottom nav .header-nav-btn { flex: 0 1 auto; min-height: 36px; padding: 5px 0; border-radius: 0; color: #7b8378; border-bottom: 2px solid transparent; background: transparent; font-size: 14px; white-space: nowrap; }
+.header-bottom nav .header-nav-btn.selected { color: #263e30; border-bottom-color: #355d49; }
+main { padding: 22px 20px 110px; }
+.garden-hero { min-height: 0; padding: 25px 22px; border-radius: 8px; background: #e7eddd; color: #283e2b; grid-template-columns: minmax(0,1fr) 85px; gap: 8px; margin-bottom: 24px; }
+.garden-hero .garden-kicker { color: #657852; font-size: 11px; letter-spacing: .05em; font-weight: 600; }
+.garden-hero h1 { color: #283e2b; font-size: clamp(27px,7.8vw,39px); line-height: 1.2; letter-spacing: -.07em; margin: 12px 0; font-weight: 700; }
+.garden-hero p { color: #6d7a60; font-size: 12px; line-height: 1.8; }
+.garden-hero button { background: #355d49; color: #fffef5; border-radius: 6px; margin-top: 19px; min-height: 44px; font-size: 13px; padding: 0 13px; gap: 12px; }
+.garden-hero button:hover { background: #234333; }
+.garden-mascot { width: 100%; filter: none; opacity: .95; }
+.today-card { padding: 20px 0; background: transparent; border: 0; border-top: 1px solid #dce2d3; border-bottom: 1px solid #dce2d3; border-radius: 0; box-shadow: none; display: flex; flex-direction: row; gap: 18px; align-items: center; }
+.progress-ring { width: 76px; height: 76px; flex-shrink: 0; background: conic-gradient(#56734e var(--progress),#e6e9df 0); }
+.progress-ring>div { background: #f6f5ef; }
+.progress-ring strong { color: #355d49; font-size: 23px; }
+.today-copy { min-width: 0; }
+.today-copy h1, .today-copy h2 { color: #263e30; font-size: 17px; margin: 0 0 6px; }
+.today-copy>span { font-size: 12px; line-height: 1.7; }
+.today-bars { display: none; }
+.preview-card { background: #fffefb; color: #293c2f; border: 1px solid #dce2d3; border-radius: 8px; padding: 18px; box-shadow: none; margin-top: 16px; }
+.preview-card small { color: #7b8574; font-size: 10px; letter-spacing: .02em; }
+.preview-card strong { color: #293c2f; font-size: 15px; font-weight: 650; line-height: 1.5; }
+.preview-card>span { color: #355d49; }
+.garden-activity { gap: 16px; margin-top: 26px; }
+.chess-level-banner, .cal-card { border: 1px solid #e0e4da; background: #fffefb; box-shadow: none; border-radius: 8px; }
+.chess-level-banner { padding: 17px; gap: 15px; }
+.chess-icon-wrap { background: #edf0e6; box-shadow: none; border-radius: 8px; }
+.chess-info h3 { font-size: 14px; }
+.chess-info p, .chess-progress-labels { font-size: 11px; }
+.chess-rank-name { color: #355d49; }
+.chess-track i { background: #708c5e; }
+.cal-card { padding: 18px; }
+.cal-title { color: #455b40; font-size: 13px; }
+.cal-day { border-radius: 5px; background: transparent; border: 0; color: #5b6955; }
+.cal-day.today { border: 1px solid #7b9368; }
+.cal-day.studied { background: #e0e9d5; color: #355d49; }
+.section { margin-top: 32px; }
+.section-heading { align-items: baseline; margin-bottom: 14px; }
+.section-heading h2 { font-size: 18px; font-weight: 700; letter-spacing: -.6px; }
+.section-heading .header-nav-btn { color: #78846f; background: transparent; padding: 4px 0; font-size: 11px; }
+.major-card { background: #fffefb; border: 1px solid #e0e4da; border-radius: 8px; box-shadow: none; padding: 18px 14px; }
+.major-card:hover { transform: none; border-color: #96a78a; box-shadow: none; }
+.major-card-icon { font-size: 24px; margin-bottom: 12px; filter: saturate(.65); }
+.major-card-name { font-size: 15px; line-height: 1.5; font-weight: 650; color: #354733; }
+.major-card-badge { font-size: 11px; line-height: 1.6; color: #859079; }
+.stats-grid>div { border-radius: 7px; box-shadow: none; border: 1px solid #e0e4da; background: #fffefb; }
+.stats-grid strong { font-size: 23px; color: #46643a; font-weight: 650; }
+.stats-grid span { color: #8a9380; font-size: 10px; }
+.study-card, .quiz-battle-card, .word-mini { background: #fffefb; border: 1px solid #dfe5d8; box-shadow: none; border-radius: 10px; }
+.study-card h1, .quiz-question-box h2 { font-size: clamp(28px,8vw,40px); letter-spacing: -.04em; overflow-wrap: anywhere; }
+.quiz-battle-card { width: 100%; min-width: 0; transform: none; animation: none; }
+.quiz-option { border-radius: 7px; padding: 14px 12px; background: #fffefb; font-size: 15px; line-height: 1.6; min-width: 0; }
+.quiz-option.chosen, .quiz-option.correct { background: #edf2e6; border-color: #7e986c; }
+.quiz-sub, .example p { font-size: 14px; line-height: 1.7; overflow-wrap: anywhere; }
+.bottom-nav { background: #fffefb; border-top: 1px solid #dfe5d8; box-shadow: 0 -4px 16px #2b3d2505; min-height: 76px; height: auto; padding: 8px 5px calc(8px + env(safe-area-inset-bottom)); }
+.nav-tab { min-width: 0; height: auto; min-height: 54px; gap: 6px; border-radius: 0; padding: 0 2px; }
+.nav-tab.active { background: transparent; color: #355d49; }
+.nav-icon { font-size: 19px; filter: saturate(.5); }
+.nav-label { white-space: normal; word-break: keep-all; line-height: 1.3; text-align: center; font-size: 11px; color: #7e8776; }
+.nav-tab.active .nav-label { color: #355d49; font-weight: 750; }
+.site-footer { color: #909b85; border-color: #e0e4da; font-size: 10px; }
+button:focus-visible { outline: 2px solid #6c8556; outline-offset: 3px; }
+
+/* Mobile reading surface and navigation */
+body { -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; }
+.app-shell { max-width: 900px; margin: 0 auto; }
+.app-header { padding: 24px 24px 0; border-bottom: 0; }
+.brand { font-size: 24px; font-weight: 700; letter-spacing: -1.1px; }
+.header-bottom p { max-width: 32ch; font-size: 13px; color: #64705f; }
+.header-bottom nav { gap: 26px; border-bottom: 1px solid #dfe3d8; }
+.header-bottom nav .header-nav-btn { min-height: 45px; font-size: 14px; font-weight: 500; margin-bottom: -1px; border-bottom-width: 2px; }
+.header-bottom nav .header-nav-btn.selected { font-weight: 700; }
+main { padding: 26px 24px 112px; }
+.today-card { margin: 0 0 24px; padding: 0 0 24px; border-top: 0; gap: 22px; }
+.progress-ring { width: 80px; height: 80px; padding: 5px; }
+.progress-ring strong { font-size: 25px; font-weight: 650; letter-spacing: -1px; }
+.today-copy h1, .today-copy h2 { margin-bottom: 8px; font-size: 18px; font-weight: 650; }
+.today-copy>span { font-size: 13px; line-height: 1.75; color: #63705e; }
+.streak b { background: transparent; color: #7c633b; padding: 0; }
+.garden-hero { margin-bottom: 0; padding: 22px 20px; border-radius: 12px; grid-template-columns: minmax(0,1fr) 76px; background: #e9eddf; }
+.garden-hero h1 { font-size: 24px; font-weight: 650; letter-spacing: -1.1px; margin: 7px 0 10px; line-height: 1.35; }
+.garden-hero .garden-kicker { font-size: 10px; font-weight: 600; color: #6d7c60; }
+.garden-hero p { font-size: 13px; line-height: 1.7; }
+.garden-hero button { min-height: 42px; margin-top: 16px; font-weight: 600; border-radius: 7px; box-shadow: none; }
+.garden-activity { display: grid; grid-template-columns: minmax(0,1fr); gap: 16px; }
+.preview-card { margin-top: 18px; padding: 19px 17px; border-radius: 10px; }
+.preview-card small { font-size: 11px; text-transform: none; color: #77836d; }
+.preview-card strong { margin-top: 5px; line-height: 1.55; font-size: 16px; font-weight: 600; }
+.section-heading { flex-wrap: wrap; gap: 6px; }
+.section-heading h2 { font-size: 19px; font-weight: 650; letter-spacing: -.7px; }
+.section-heading>span { font-size: 12px; color: #78816f; }
+.major-card { padding: 19px 15px; border-radius: 10px; text-align: left; }
+.major-card-icon { margin-bottom: 13px; font-size: 23px; }
+.major-card-name { font-size: 15px; font-weight: 600; line-height: 1.6; word-break: keep-all; }
+.major-card-badge { margin-top: 5px; font-size: 11px; color: #6d7a63; }
+.chess-level-banner { padding: 18px; border-radius: 10px; }
+.chess-icon-wrap { width: 40px; height: 40px; font-size: 25px; }
+.chess-info h3 { font-size: 13px; font-weight: 600; }
+.chess-progress-labels { color: #6f7b64; font-size: 11px; }
+.cal-card { border-radius: 10px; }
+.cal-header { padding-bottom: 12px; border-bottom: 1px solid #eceee5; margin-bottom: 12px; }
+.cal-title { font-size: 14px; font-weight: 600; }
+.cal-dname { font-size: 11px; color: #7b8572; }
+.cal-day { font-size: 13px; min-height: 32px; border-radius: 50%; aspect-ratio: 1; }
+.stats-grid { gap: 8px; }
+.stats-grid>div { padding: 17px 5px; border-radius: 9px; }
+.stats-grid strong { font-variant-numeric: tabular-nums; font-weight: 600; font-size: 24px; }
+.stats-grid span { font-size: 11px; line-height: 1.5; }
+.study-card { padding: 24px 20px; border-radius: 12px; }
+.study-card h1 { margin-top: 28px; font-size: clamp(30px,8vw,42px); font-weight: 650; }
+.definition h2 { font-size: 20px; line-height: 1.5; font-weight: 600; }
+.example { padding: 16px; background: #f1f3eb; border-radius: 7px; }
+.example p { font-size: 15px; line-height: 1.8; color: #46553e; }
+.example p:last-child { font-size: 13px; color: #6d7963; }
+.tip { background: #f4f0e4; color: #766344; border-color: #e7dfc9; border-radius: 8px; }
+.tip p { font-size: 12px; line-height: 1.7; }
+.word-row { padding: 14px 15px; border-radius: 7px; }
+.word-row strong { font-size: 15px; font-weight: 600; }
+.word-row small { font-size: 12px; line-height: 1.6; }
+.button { font-size: 15px; font-weight: 600; border-radius: 8px; min-height: 48px; }
+.button.primary { background: #355d49; box-shadow: none; }
+.button.subtle { background: #edf0e6; color: #47593d; border-color: #dce3d3; }
+.quiz-header-row { flex-wrap: wrap; gap: 9px; }
+.quiz-battle-card { padding: 20px 16px; border-radius: 12px; }
+.quiz-question-box { padding: 20px 0 25px; }
+.quiz-question-box h2 { font-weight: 650; letter-spacing: -.8px; line-height: 1.4; }
+.quiz-option { min-height: 58px; padding: 14px 12px; border-width: 1px; gap: 12px; white-space: normal; overflow-wrap: anywhere; }
+.quiz-option>span:first-child { font-weight: 500; background: transparent; padding: 0; color: #8a947e; }
+.quiz-direction-tag { color: #617250; background: #edf0e6; border-radius: 5px; font-weight: 500; }
+.quiz-feedback { border-radius: 7px; font-size: 14px; line-height: 1.7; }
+.bottom-nav { padding: 10px 10px calc(10px + env(safe-area-inset-bottom)); }
+.nav-tab { min-height: 48px; gap: 5px; background: transparent; }
+.nav-icon { width: 36px; height: 28px; display: grid; place-items: center; color: #8a9582; filter: none; border-radius: 8px; transition: background .15s; }
+.nav-tab.active .nav-icon { color: #355d49; background: #e9efdf; }
+.nav-label { font-size: 11px; letter-spacing: 0; font-weight: 500; color: #77856b; }
+.site-footer { line-height: 1.7; flex-wrap: wrap; gap: 8px; }
+@media(min-width:600px) {
+  main { padding-inline: 36px; }
+  .app-header { padding-inline: 36px; }
+  .garden-hero { grid-template-columns: minmax(0,1fr) 140px; padding: 30px; }
+  .garden-activity { grid-template-columns: minmax(0,1fr) minmax(0,1fr); }
+}
+@media(max-width:350px) {
+  main { padding-inline: 18px; }
+  .app-header { padding-inline: 18px; }
+  .garden-hero { grid-template-columns: minmax(0,1fr) 62px; padding: 18px 14px; }
+  .garden-hero h1 { font-size: 22px; }
+  .today-card { gap: 16px; }
+  .progress-ring { width: 68px; height: 68px; }
+}
+
+/* Wide layouts retain a comfortable reading measure. */
+@media(min-width:900px) {
+  .app-shell { max-width: 1120px; padding: 0 28px; }
+  .app-header { padding: 32px 32px 0; }
+  .header-bottom { flex-direction: row; align-items: center; margin-top: 20px; gap: 32px; border-bottom: 1px solid #dfe3d8; }
+  .header-bottom p { max-width: none; }
+  .header-bottom nav { width: auto; border: 0; gap: 28px; }
+  main { padding: 32px 32px 120px; }
+  .today-card { gap: 28px; padding-bottom: 28px; margin-bottom: 28px; }
+  .today-copy { flex: 1; }
+  .today-bars { display: block; width: 220px; }
+  .garden-hero { padding: 36px; grid-template-columns: minmax(0,1fr) 180px; }
+  .garden-hero h1 { font-size: 38px; letter-spacing: -1.8px; }
+  .garden-hero p { font-size: 15px; }
+  .garden-hero button { font-size: 14px; padding-inline: 20px; }
+  .garden-activity { gap: 20px; }
+  .major-card { padding: 24px 20px; }
+  .section { margin-top: 40px; }
+  .section-heading h2 { font-size: 21px; }
+  .bottom-nav { left: 50%; width: min(100%, 760px); transform: translateX(-50%); border: 1px solid #dfe5d8; border-radius: 16px 16px 0 0; }
+}
+@media(prefers-reduced-motion:reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
+}

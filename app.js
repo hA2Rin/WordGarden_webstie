@@ -222,17 +222,16 @@ function header() {
       </svg>
     </button>
     <div class="header-tools">
-      <span class="local-status"><i></i>${navigator.onLine ? '기기 캐시 가동' : '오프라인'}</span>
       <button class="icon-button" data-action="open-settings" aria-label="설정 및 동기화">⚙️</button>
     </div>
   </div>
   <div class="header-bottom">
     <p>${
-      view === 'quiz' ? '♟️ 단어 배틀 체스 · 퀴즈를 맞춰야 말을 움직입니다!' :
-      view === 'majors' ? '8대 전공 · 2,000 학술 영어 어휘 🎓' :
-      view === 'review' ? '오답 복습 및 나만의 즐겨찾기 단어장 🔁' :
-      view === 'detail' ? 'Day별 집중 단어 학습 📖' :
-      '매일 한 단어씩 자라는 나만의 학술 영단어 정원 🌱'
+      view === 'quiz' ? '단어를 익히며 즐기는 체스' :
+      view === 'majors' ? '관심 있는 전공부터 시작하세요.' :
+      view === 'review' ? '다시 보고 싶은 단어를 모았습니다.' :
+      view === 'detail' ? '하루 한 세트, 차근차근.' :
+      '오늘의 학습을 이어가세요.'
     }</p>
     <nav aria-label="상단 메뉴">
       <button class="header-nav-btn ${view === 'home' ? 'selected' : ''}" data-action="nav-home">홈</button>
@@ -249,7 +248,7 @@ function renderConnection() {
     `⚠️ ${escape(storageError)} <button data-action="open-settings">기록 확인</button>` :
     syncStatus === 'failed' ?
     `⚠️ 클라우드 동기화에 실패했습니다. <button data-action="sync">다시 시도</button>` :
-    `📶 오프라인 모드 가동 중 · <span>${pendingEvents(state).length}개 기록 로컬 보관</span>`;
+    `오프라인 · 저장된 단어로 학습 중`;
 }
 
 /* ============================================
