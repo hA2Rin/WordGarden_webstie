@@ -1,7 +1,7 @@
 {
   "id":"./",
-  "name":"Word Garden · 나의 단어 정원",
-  "short_name":"Word Garden",
+  "name":"smalltalk · 전공 영어 단어장",
+  "short_name":"smalltalk",
   "description":"주제별 영어 단어 학습과 복습",
   "lang":"ko",
   "start_url":"./",

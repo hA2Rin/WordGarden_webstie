@@ -215,8 +215,8 @@ function header() {
   }
 
   return `<div class="brand-row">
-    <button class="brand" data-action="nav-home" aria-label="Word Garden 홈">
-      <span>Word Garden</span>
+    <button class="brand" data-action="nav-home" aria-label="smalltalk 홈">
+      <span>smalltalk</span>
       <svg class="brand-leaf" viewBox="0 0 24 24" aria-hidden="true">
         <path d="M12 21V10M12 15C3 15 3 6 3 6s9-1 9 9ZM12 11c0-8 9-9 9-9s1 9-9 9Z"/>
       </svg>
@@ -335,7 +335,7 @@ function home() {
       <p>8개 전공의 핵심 영단어 2,000개를<br>하루 한 세트씩 익혀보세요.</p>
       <button data-action="${active ? 'continue-study' : 'nav-majors'}">${active ? '이어서 학습하기' : '전공 선택하기'} <span aria-hidden="true">↗</span></button>
     </div>
-    <img class="garden-mascot" src="./mascot.png" width="1200" height="1280" alt="책을 펼쳐 든 Word Garden 새싹 마스코트">
+    <img class="garden-mascot" src="./mascot.png" width="1200" height="1280" alt="책을 펼쳐 든 smalltalk 새싹 마스코트">
   </section>
   <section class="today-card" aria-label="오늘의 학습 진도">
     <div class="progress-ring" style="--progress:${percent}%">
