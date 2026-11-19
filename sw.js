@@ -1,11 +1,12 @@
 const prefix = `word-garden:${self.registration.scope}:`;
-const cacheName = `${prefix}9`;
+const cacheName = `${prefix}10`;
 const files = [
-  './', './index.html', './styles.css?v=8', './garden.css?v=7', './app.js?v=9',
+  './', './index.html', './styles.css?v=8', './garden.css?v=7', './app.js?v=10',
   './data.js', './store.js?v=6', './store.js', './sync.js', './config.js',
   './chessEngine.js?v=5', './chessOnline.js', './icon.svg', './mascot.png',
   './manifest.webmanifest',
   './editorial.css?v=9', './editorial.js?v=9',
+  './arrival.css?v=10', './arrival.js?v=10', './reading-leaf.svg',
 ];
 const assetUrls = new Set(files.map(file => new URL(file, self.registration.scope).href));
 

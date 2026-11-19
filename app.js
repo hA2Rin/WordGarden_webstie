@@ -335,7 +335,7 @@ function home() {
       <p>8개 전공의 핵심 영단어 2,000개를<br>하루 한 세트씩 익혀보세요.</p>
       <button data-action="${active ? 'continue-study' : 'nav-majors'}">${active ? '이어서 학습하기' : '전공 선택하기'} <span aria-hidden="true">↗</span></button>
     </div>
-    <img class="garden-mascot" src="./mascot.png" width="1200" height="1280" alt="책을 펼쳐 든 smalltalk 새싹 마스코트">
+    <img class="garden-mascot" src="./reading-leaf.svg" width="180" height="180" alt="펼친 책 위로 자라는 두 잎">
   </section>
   <section class="today-card" aria-label="오늘의 학습 진도">
     <div class="progress-ring" style="--progress:${percent}%">
@@ -901,6 +901,7 @@ function render() {
     case 'review': content = reviewPage(); break;
     default: content = home(); break;
   }
+  $('#main').dataset.page = view;
   $('#main').innerHTML = content;
 }
 
